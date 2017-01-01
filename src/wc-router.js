@@ -1,7 +1,7 @@
 import createHistory from 'history/createBrowserHistory';
 import matchPath from 'lib/matchPath';
 
-const VALID_CHILDREN = ['WC-ROUTE'];
+const VALID_CHILDREN = ['WC-ROUTE', 'WC-SWITCH'];
 
 export default class Router extends HTMLElement {
     constructor() {
@@ -58,8 +58,12 @@ export default class Router extends HTMLElement {
 
 
     // Map the history API nav functions to the element
-    push(path, state) { this.history.push(path, state); }
-    replace(path, state) { this.history.replace(path, state); }
+    push(path, state) {
+        this.history.push(path, state);
+    }
+    replace(path, state) {
+        this.history.replace(path, state);
+    }
     go(n) { this.history.go(n); }
     goBack() { this.history.goBack(); }
     goForward() { this.history.goForward(); }
@@ -85,11 +89,11 @@ export default class Router extends HTMLElement {
                 routes.forEach(r => {
                     if (!r.isConnected) {
                         if (r.exact && !match.isExact) return;
-                        r.oldParent.appendChild(r);
+                        r.connect();
                     }
                 });
             } else this.routes[route] = routes.map(r =>
-                r.isConnected ? r.parentNode.removeChild(r) : r
+                r.isConnected ? r.disconnect() : r
             );
         });
 
