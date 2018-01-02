@@ -1,4 +1,5 @@
 import createHistory from 'history/createBrowserHistory';
+import matchPath from 'lib/matchPath';
 
 const VALID_CHILDREN = ['WC-ROUTE'];
 
@@ -6,7 +7,7 @@ export default class Router extends HTMLElement {
     constructor() {
         super();
         this.observer = new MutationObserver(this._handleMutation.bind(this));
-        this.routes = new Map();
+        this.routes = {};
     }
 
     connectedCallback() {
@@ -14,8 +15,9 @@ export default class Router extends HTMLElement {
         if (existing.length > 1) this._error('Duplicate <wc-router>. Page may only contain one.');
 
         const history = createHistory({
-            basename: this.getAttribute('basename')
+            basename: this.basename
         });
+        window._history = history
 
         Object.defineProperty(this, 'history', {
             get: () => history,
@@ -35,15 +37,19 @@ export default class Router extends HTMLElement {
 
 
     disconnectedCallback() {
-        console.log('disconnecting');
         this.unlisten();
         this.observer.disconnect();
     }
 
 
+    static get observedAttributes() {
+        return ['basename']
+    }
+
     attributeChangedCallback(attr, oldV, newV) {
         switch(attr) {
-
+            case 'basename':
+                this.basename = newV;
         }
     }
 
@@ -58,27 +64,26 @@ export default class Router extends HTMLElement {
 
 
     register(route) {
-        let existing = Array.from(this.routes).find(([r]) => r.spec === route.path.spec);
-        if (existing) {
-            this.routes.set(existing[0], [route, ...existing[1]]);
-        }
-        else this.routes.set(route.path, [route]);
+        let existing = this.routes[route.path]
+        if (existing) this.routes[route.path] = [route, ...existing[1]];
+        else this.routes[route.path] = [route];
 
-        // this._handleChange(this);
+        this._handleChange(this.history.location);
     }
 
 
 
     _handleChange(location) {
-        console.log('here');
-        this.routes.forEach((routes, route) => {
-            if (route.match(location.pathname)) {
+        Object.entries(this.routes).forEach(([route, routes]) => {
+            const match = matchPath(location.pathname, route);
+
+            if (match) {
                 routes.forEach(r => {
                     if (!r.isConnected) r.oldParent.appendChild(r);
                 });
-            } else this.routes.set(route, routes.map(r =>
+            } else this.routes[route] = routes.map(r =>
                 r.isConnected ? r.parentNode.removeChild(r) : r
-            ));
+            );
         });
     }
 

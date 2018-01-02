@@ -1,5 +1,4 @@
 import createHistory from 'history/createBrowserHistory';
-import RParser from 'route-parser';
 
 export default class Route extends HTMLElement {
     constructor() {
@@ -10,7 +9,6 @@ export default class Route extends HTMLElement {
 
         this.router = document.querySelector('wc-router');
         if (!this.router) this._error('Place the route inside a <WC-ROUTER>');
-        this.unlisten = this.router.history.listen(this.handleChange.bind(this));
     }
 
 
@@ -20,18 +18,15 @@ export default class Route extends HTMLElement {
             this.registered = true;
             this.router.register(this);
         }
+
+        const element = this.getAttribute('element');
+        if (element) {
+            this.innerHTML = '';
+            this.appendChild(document.createElement(element));
+        }
     }
 
     disconnectedCallback() {
-        this.unlisten();
-    }
-
-
-    get path() {
-        return this._path;
-    }
-    set path(v) {
-        this._path = new RParser(v)
     }
 
 

@@ -11,7 +11,13 @@ module.exports = {
     entry: path.resolve(SRC_PATH, 'bundle.js'),
     output: {
         filename: 'wc-router.min.js',
-        path: path.resolve(DIST_PATH)
+        path: path.resolve(DIST_PATH),
+        publicPath: '/'
+    },
+    devServer: {
+        historyApiFallback: {
+            index: '/'
+        }
     },
     module: {
         loaders: [{
@@ -25,12 +31,14 @@ module.exports = {
         new HTMLPlugin({
             template: './index.html'
         })
-    ]
+    ],
+    resolve: {
+        alias: {
+            'lib': path.join(SRC_PATH, 'lib')
+        }
+    }
 };
 
 if (ENV === 'production') {
     module.exports.plugins.push(new MinifyPlugin());
 }
-
-
-console.log(process.env.NODE_ENV);

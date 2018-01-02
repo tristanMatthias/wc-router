@@ -6,18 +6,33 @@
 </head>
 <body>
     <h1>WC Router test</h1>
-    <wc-link to='/'>Home</wc-link>
-    <wc-link to='/test'>Test</wc-link>
-    <wc-link to='/settings'>Settings</wc-link>
+    <ul>
+        <li><wc-link to='/'>Home</wc-link></li>
+        <li><wc-link to='/test'>Test</wc-link></li>
+        <li><wc-link to='/settings'>Settings</wc-link></li>
+    </ul>
     <wc-router>
         <wc-route path="/">
-            INSIDE path="/"
+            <h2> / </h2>
         </wc-route>
         <wc-route path="/settings">
-            INSIDE path="/settings"
+            <h2> /settings </h2>
+            <wc-link to='/settings/1'>Settings 1</wc-link>
+            <wc-link to='/settings/2'>Settings 2</wc-link>
+            <wc-link to='/settings/3'>Settings 3</wc-link>
+
+            <wc-route path="/settings/1">
+                Settings page 1
+            </wc-route>
+            <wc-route path="/settings/2">
+                Settings page 2
+            </wc-route>
+            <wc-route path="/settings/3">
+                Settings page 3
+            </wc-route>
         </wc-route>
         <wc-route path="/test">
-            INSIDE path="/test"
+            <h2> /test </h2>
         </wc-route>
     </wc-router>
 </body>

@@ -1,5 +1,4 @@
 import createHistory from 'history/createBrowserHistory';
-import RParser from 'route-parser';
 
 export default class Link extends HTMLElement {
     constructor() {
