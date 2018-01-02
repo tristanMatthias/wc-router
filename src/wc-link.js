@@ -1,10 +1,4 @@
-import createHistory from 'history/createBrowserHistory';
-
 export default class Link extends HTMLElement {
-    constructor() {
-        super();
-    }
-
     connectedCallback() {
         this.router = document.querySelector('wc-router');
 

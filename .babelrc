@@ -1,6 +1,9 @@
 {
     "plugins": [
+        "transform-es2015-modules-commonjs",
         "transform-object-rest-spread",
+        "transform-decorators-legacy",
+        "transform-custom-element-classes",
         [
             "transform-runtime",
             {
@@ -10,7 +13,7 @@
         ]
     ],
     "presets": [
-        "stage-0"
+        "es2015"
     ],
     "env": {
         "production": {

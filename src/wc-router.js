@@ -12,12 +12,15 @@ export default class Router extends HTMLElement {
 
     connectedCallback() {
         const existing = document.querySelectorAll(this.tagName);
-        if (existing.length > 1) this._error('Duplicate <wc-router>. Page may only contain one.');
+
+        if (existing.length > 1) this._error(
+            'Duplicate <wc-router>. Page may only contain one.'
+        );
 
         const history = createHistory({
             basename: this.basename
         });
-        window._history = history
+        window._history = history;
 
         Object.defineProperty(this, 'history', {
             get: () => history,
@@ -43,11 +46,11 @@ export default class Router extends HTMLElement {
 
 
     static get observedAttributes() {
-        return ['basename']
+        return ['basename'];
     }
 
     attributeChangedCallback(attr, oldV, newV) {
-        switch(attr) {
+        switch (attr) {
             case 'basename':
                 this.basename = newV;
         }
@@ -55,16 +58,15 @@ export default class Router extends HTMLElement {
 
 
     // Map the history API nav functions to the element
-    push(path, state) { this.history.push(...arguments) }
-    replace(path, state) { this.history.replace(...arguments) }
-    go(n) { this.history.go(...arguments) }
-    goBack() { this.history.goBack() }
-    goForward() { this.history.goForward() }
-
+    push(path, state) { this.history.push(path, state); }
+    replace(path, state) { this.history.replace(path, state); }
+    go(n) { this.history.go(n); }
+    goBack() { this.history.goBack(); }
+    goForward() { this.history.goForward(); }
 
 
     register(route) {
-        let existing = this.routes[route.path];
+        const existing = this.routes[route.path];
         // Remove initially so it doesn't show, then if applicable, insert back
         // in once route is hit
         const removed = route.parentNode.removeChild(route);
@@ -75,14 +77,16 @@ export default class Router extends HTMLElement {
     }
 
 
-
     _handleChange(location) {
         Object.entries(this.routes).forEach(([route, routes]) => {
             const match = matchPath(location.pathname, route);
 
             if (match) {
                 routes.forEach(r => {
-                    if (!r.isConnected) r.oldParent.appendChild(r);
+                    if (!r.isConnected) {
+                        if (r.exact && !match.isExact) return;
+                        r.oldParent.appendChild(r);
+                    }
                 });
             } else this.routes[route] = routes.map(r =>
                 r.isConnected ? r.parentNode.removeChild(r) : r
@@ -103,8 +107,10 @@ export default class Router extends HTMLElement {
     _validateChildren() {
         Array.from(this.children).forEach(c => {
             if (!VALID_CHILDREN.includes(c.tagName)) this._error(
-                `Invalid child. Should be one of <${VALID_CHILDREN.join('>, <')}>`
-            )
+                `Invalid child. Should be one of <${
+                    VALID_CHILDREN.join('>, <')
+                }>`
+            );
         });
     }
 }

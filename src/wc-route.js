@@ -1,5 +1,3 @@
-import createHistory from 'history/createBrowserHistory';
-
 export default class Route extends HTMLElement {
     constructor() {
         super();
@@ -32,36 +30,21 @@ export default class Route extends HTMLElement {
 
     static get observedAttributes() {
         return [
-            'path'
+            'path',
+            'exact'
         ];
     }
-
 
 
     attributeChangedCallback(attr, oldV, newV) {
         switch (attr) {
             case 'path':
                 this.path = newV;
+                break;
+            case 'exact':
+                if (newV == '') this.exact = true;
+                else this.exact = Boolean(newV);
         }
-    }
-
-
-    // Map the history API nav functions to the element
-    push(path, state) { this.history.push(...arguments) }
-    replace(path, state) { this.history.replace(...arguments) }
-    go(n) { this.history.go(...arguments) }
-    goBack() { this.history.goBack() }
-    goForward() { this.history.goForward() }
-
-
-
-    handleChange(location, action) {
-        // console.log('router', location);
-    }
-
-
-    handleMutation([e]) {
-        if (e.addedNodes) this._validateChildren();
     }
 
 
