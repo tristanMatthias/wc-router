@@ -1,0 +1,51 @@
+{
+    "plugins": [
+        "transform-object-rest-spread",
+        [
+            "transform-runtime",
+            {
+                "polyfill": false,
+                "regenerator": true
+            }
+        ]
+    ],
+    "presets": [
+        "stage-0"
+    ],
+    "env": {
+        "production": {
+            "comments": false,
+            "minified": true,
+            "compact": true,
+            "presets": [
+                [
+                    "minify",
+                    {
+                        "booleans": true,
+                        "builtIns": true,
+                        "consecutiveAdds": true,
+                        "deadcode": true,
+                        "evaluate": false,
+                        "flipComparisons": true,
+                        "guards": true,
+                        "infinity": true,
+                        "mangle": false,
+                        "memberExpressions": true,
+                        "mergeVars": true,
+                        "numericLiterals": true,
+                        "propertyLiterals": true,
+                        "regexpConstructors": true,
+                        "removeConsole": true,
+                        "removeDebugger": true,
+                        "removeUndefined": true,
+                        "replace": true,
+                        "simplify": true,
+                        "simplifyComparisons": true,
+                        "typeConstructors": true,
+                        "undefinedToVoid": true
+                    }
+                ]
+            ]
+        }
+    }
+}
