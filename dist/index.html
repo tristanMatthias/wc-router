@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WC Router test</title>
+</head>
+<body>
+    <h1>WC Router test</h1>
+    <wc-link to='/'>Home</wc-link>
+    <wc-link to='/test'>Test</wc-link>
+    <wc-link to='/settings'>Settings</wc-link>
+    <wc-router>
+        <wc-route path="/">
+            INSIDE path="/"
+        </wc-route>
+        <wc-route path="/settings">
+            INSIDE path="/settings"
+        </wc-route>
+        <wc-route path="/test">
+            INSIDE path="/test"
+        </wc-route>
+    </wc-router>
+<script type="text/javascript" src="wc-router.min.js"></script></body>
+</html>
