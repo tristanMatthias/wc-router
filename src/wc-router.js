@@ -92,6 +92,12 @@ export default class Router extends HTMLElement {
                 r.isConnected ? r.parentNode.removeChild(r) : r
             );
         });
+
+        Array.from(document.querySelectorAll('wc-link'))
+            .filter(l => l.to)
+            .forEach(l => {
+                l.active = Boolean(matchPath(location.pathname, l.to));
+            });
     }
 
     _handleMutation([e]) {
