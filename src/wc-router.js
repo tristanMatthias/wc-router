@@ -64,9 +64,12 @@ export default class Router extends HTMLElement {
 
 
     register(route) {
-        let existing = this.routes[route.path]
-        if (existing) this.routes[route.path] = [route, ...existing[1]];
-        else this.routes[route.path] = [route];
+        let existing = this.routes[route.path];
+        // Remove initially so it doesn't show, then if applicable, insert back
+        // in once route is hit
+        const removed = route.parentNode.removeChild(route);
+        if (existing) this.routes[route.path] = [removed, ...existing[1]];
+        else this.routes[route.path] = [removed];
 
         this._handleChange(this.history.location);
     }
