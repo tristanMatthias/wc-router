@@ -20,6 +20,14 @@ export default class Link extends HTMLElement {
         this.classList.toggle(this.activeclass, Boolean(v));
     }
 
+    set to(v) {
+        this._to = v;
+        this.setAttribute('to', v);
+    }
+    get to() {
+        return this._to;
+    }
+
 
     static get observedAttributes() {
         return ['to', 'activeclass'];
@@ -28,7 +36,7 @@ export default class Link extends HTMLElement {
     attributeChangedCallback(attr, oldV, newV) {
         switch (attr) {
             case 'to':
-                this[attr] = newV;
+                if (oldV != newV) this.to = newV;
                 break;
             case 'activeclass':
                 this[attr] = newV;
@@ -43,7 +51,7 @@ export default class Link extends HTMLElement {
 
 
     _handleClick() {
-        this.router.push(this.getAttribute('to'));
+        this.router.push(this.to);
     }
 }
 
