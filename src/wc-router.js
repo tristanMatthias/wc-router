@@ -84,7 +84,6 @@ export default class Router extends HTMLElement {
     _handleChange(location) {
         Object.entries(this.routes).forEach(([route, routes]) => {
             const match = matchPath(location.pathname, route);
-
             if (match) {
                 routes.forEach(r => {
                     if (!r.isConnected) {
