@@ -59,10 +59,10 @@ export default class Router extends HTMLElement {
 
     // Map the history API nav functions to the element
     push(path, state) {
-        this.history.push(path, state);
+        if (this.history.location.pathname != path) this.history.push(path, state);
     }
     replace(path, state) {
-        this.history.replace(path, state);
+        if (this.history.location.pathname != path) this.history.replace(path, state);
     }
     go(n) { this.history.go(n); }
     goBack() { this.history.goBack(); }
