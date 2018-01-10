@@ -66,7 +66,9 @@ export default class Switch extends HTMLElement {
 
             const match = matchPath(location.pathname, r.path);
             if (match || r.path === '*') {
-                this.router.params = (match || {}).params;
+                if (match) {
+                    this.router.params = {...this.router.params, ...match.params};
+                }
                 if (r.exact && !match.isExact) return r.disconnect();
                 else matched = r;
             } else r.disconnect();
