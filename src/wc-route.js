@@ -1,3 +1,5 @@
+import matchPath from 'lib/matchPath';
+
 export default class Route extends HTMLElement {
     constructor() {
         super();
@@ -16,7 +18,7 @@ export default class Route extends HTMLElement {
         if (!this.parentElement) return;
 
         this.cachedParent = this.parentElement;
-        this.style.display = 'none';
+        if (!matchPath(this.path)) this.style.display = 'none';
 
         if (this.initialised) return;
         this.initialised = true;
