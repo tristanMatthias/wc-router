@@ -1,6 +1,6 @@
 {
   "name": "wc-router",
-  "version": "0.0.9",
+  "version": "0.1.0",
   "description": "A dynamic router for SPA's using Web Component's custom elements",
   "main": "_bundles/wc-router.js",
   "repository": "https://github.com/tristanMatthias/wc-router.git",
