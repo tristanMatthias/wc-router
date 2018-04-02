@@ -1,44 +1,34 @@
 const path = require('path');
-const SRC_PATH = path.resolve(__dirname, 'src');
-const DIST_PATH = path.resolve(__dirname, 'dist');
-const ENV = process.env.NODE_ENV || 'local';
+const BitBarPlugin = require('bitbar-webpack-progress-plugin');
 
+const PATH_SRC = path.resolve(__dirname, 'src');
+const PATH_DIST = path.resolve(__dirname, '_bundles');
 
-const HTMLPlugin = require('html-webpack-plugin');
-const MinifyPlugin = require('babel-minify-webpack-plugin');
 
 module.exports = {
-    entry: path.resolve(SRC_PATH, 'bundle.js'),
-    output: {
-        filename: 'wc-router.min.js',
-        path: path.resolve(DIST_PATH),
-        publicPath: '/'
+    entry: {
+        "wc-router": path.join(PATH_SRC, 'index.ts'),
     },
-    devServer: {
-        historyApiFallback: {
-            index: '/'
-        }
+    output: {
+        filename: '[name].js',
+        path: PATH_DIST,
+        libraryTarget: 'umd',
+        library: 'wc-router',
+        umdNamedDefine: true
     },
     module: {
-        loaders: [{
-                test: /\.js$/,
-                exclude: /(node_modules)/,
-                loader: 'babel-loader'
+        rules: [
+            {
+                test: /\.ts/,
+                loader: 'ts-loader',
+                exclude: /node_modules/
             }
         ]
     },
-    plugins: [
-        new HTMLPlugin({
-            template: './index.html'
-        })
-    ],
     resolve: {
-        alias: {
-            'lib': path.join(SRC_PATH, 'lib')
-        }
-    }
-};
-
-if (ENV === 'production') {
-    module.exports.plugins.push(new MinifyPlugin());
+        extensions: ['.ts', '.js']
+    },
+    plugins: [
+        new BitBarPlugin()
+    ]
 }

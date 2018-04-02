@@ -1,9 +1,11 @@
-export default class Link extends HTMLElement {
-    constructor() {
-        super();
-        this.activeclass = 'active';
-    }
+import Router from './wc-router';
 
+export default class Link extends HTMLElement {
+    activeclass: string = 'active';
+    router: Router | null = null;
+
+    private _active: boolean = false;
+    private _to: string = '';
 
     connectedCallback() {
         this.router = document.querySelector('wc-router');
@@ -33,10 +35,10 @@ export default class Link extends HTMLElement {
         return ['to', 'activeclass'];
     }
 
-    attributeChangedCallback(attr, oldV, newV) {
+    attributeChangedCallback(attr: keyof Link, oldV: string, newV: string) {
         switch (attr) {
             case 'to':
-                if (oldV != newV) this.to = newV;
+                if (oldV !== newV) this.to = newV;
                 break;
             case 'activeclass':
                 this[attr] = newV;
@@ -50,8 +52,9 @@ export default class Link extends HTMLElement {
     }
 
 
-    _handleClick() {
-        this.router.push(this.to);
+    private _handleClick() {
+        const r = this.router;
+        if (r) r.push(this.to);
     }
 }
 

@@ -2,16 +2,16 @@
   "name": "wc-router",
   "version": "0.0.9",
   "description": "A dynamic router for SPA's using Web Component's custom elements",
-  "main": "dist/wc-router.min.js",
+  "main": "_bundles/wc-router.js",
   "repository": "https://github.com/tristanMatthias/wc-router.git",
   "author": "Tristan Matthias <hello@tristanmatthias.com>",
   "license": "MIT",
+  "typings": "./_bundles/lib/index.d.ts",
   "scripts": {
-    "watch": "webpack -w",
-    "build": "webpack",
-    "build:prod": "NODE_ENV=production webpack",
-    "start": "webpack-dev-server",
-    "lint": "eslint src/"
+    "clean": "rm -rf _bundles lib lib-esm",
+    "build": "yarn clean && tsc && tsc -m es6 --outDir lib-esm && webpack-cli --mode production",
+    "watch": "webpack-cli --watch --mode development",
+    "lint": "tslint -s node_modules/custom-tslint-formatters/formatters -t grouped src/**/*.ts --fix"
   },
   "keywords": [
     "web-components",
@@ -21,22 +21,16 @@
     "javascript"
   ],
   "devDependencies": {
-    "babel-core": "^6.26.0",
-    "babel-eslint": "8.0.1",
-    "babel-loader": "^7.1.2",
-    "babel-minify-webpack-plugin": "^0.2.0",
-    "babel-plugin-transform-custom-element-classes": "^0.1.0",
-    "babel-plugin-transform-decorators-legacy": "^1.3.4",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-plugin-transform-runtime": "^6.23.0",
-    "babel-preset-es2015": "^6.24.1",
-    "babel-preset-stage-0": "^6.24.1",
-    "eslint": "^4.14.0",
-    "eslint-plugin-prefer-object-spread": "^1.2.1",
+    "@types/history": "^4.6.2",
+    "bitbar-webpack-progress-plugin": "^1.0.0",
     "history": "^4.7.2",
     "html-webpack-plugin": "^2.30.1",
     "path-to-regexp": "^2.1.0",
-    "webpack": "^3.10.0",
-    "webpack-dev-server": "^2.9.7"
+    "ts-loader": "^4.1.0",
+    "tslint": "^5.9.1",
+    "tslint-config-origami": "^1.0.1",
+    "typescript": "^2.8.1",
+    "webpack": "^4.4.1",
+    "webpack-cli": "^2.0.13"
   }
 }
