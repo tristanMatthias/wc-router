@@ -71,7 +71,7 @@ export default class Router extends HTMLElement {
         }
     }
 
-    match(path: string, compare: MatchPathOptions) { return matchPath(path, compare); }
+    match(path: string, compare: MatchPathOptions | string) { return matchPath(path, compare); }
 
     // Map the history API nav functions to the element
     push(path: string, state?: any) {
