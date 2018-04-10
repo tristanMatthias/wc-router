@@ -9,22 +9,21 @@ const VALID_CHILDREN = ['WC-ROUTE', 'WC-REDIRECT'];
 
 export default class Switch extends HTMLElement {
     routes: Route[] = [];
-    router: Router | null;
+    router: Router | null = null;
     observer: MutationObserver;
     unlisten: UnregisterCallback | null = null;
 
     constructor() {
         super();
-
-        this.router = document.querySelector('wc-router');
-        if (!this.router) this._error('Place the switch inside a <WC-ROUTER>');
-
         this.observer = new MutationObserver(this._handleMutation.bind(this));
     }
 
 
     connectedCallback() {
         const init = () => {
+            this.router = document.querySelector('wc-router');
+            if (!this.router) this._error('Place the switch inside a <WC-ROUTER>');
+
             const r = this.router;
             if (!r) return this._error('Router does not exist');
 

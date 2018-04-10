@@ -10,33 +10,40 @@ export default class Route extends HTMLElement {
     exact: boolean = false;
     element: string | null = null;
     cachedChildren: HTMLElement[] = [];
-    router: Router | null;
+    router: Router | null = null;
     cachedParent: HTMLElement | null = null;
 
     constructor() {
         super();
 
-        this.router = document.querySelector('wc-router');
     }
 
 
     connectedCallback() {
-        if (!this.router) return this._error('Place the route inside a <WC-ROUTER>');
-        if (!this.parentElement) return;
+        const init = () => {
+            this.router = document.querySelector('wc-router');
 
-        this.cachedParent = this.parentElement;
-        if (!matchPath(this.path)) this.style.display = 'none';
+            if (!this.router) return this._error('Place the route inside a <WC-ROUTER>');
+            if (!this.parentElement) return;
 
-        if (this.initialised) return;
-        this.initialised = true;
+            this.cachedParent = this.parentElement;
+            if (!matchPath(this.path)) this.style.display = 'none';
+
+            if (this.initialised) return;
+            this.initialised = true;
 
 
-        if (this.parentElement.tagName !== 'WC-SWITCH') {
-            if (!this.registered) {
-                this.registered = true;
-                this.router.register(this);
+            if (this.parentElement.tagName !== 'WC-SWITCH') {
+                if (!this.registered) {
+                    this.registered = true;
+                    this.router.register(this);
+                }
             }
-        }
+        };
+
+        // @ts-ignore Provided by WC polyfill
+        if (window.WebComponents.ready) init();
+        document.addEventListener('WebComponentsReady', init.bind(this));
     }
 
 
