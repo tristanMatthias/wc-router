@@ -49,8 +49,10 @@ export default class Route extends HTMLElement {
 
     connect(parent = this.cachedParent) {
         if (!parent) return this._error('No parent');
-        if (this.isConnected) return;
-        if (!this.cachedChildren && this.element) this.cachedChildren = [document.createElement(this.element)];
+        if (this.isConnected && this.children.length) return;
+        if (!this.cachedChildren.length && this.element) {
+            this.cachedChildren = [document.createElement(this.element)];
+        }
         this.cachedChildren.forEach(c => this.appendChild(c));
         parent.appendChild(this);
         this.style.display = 'block';
