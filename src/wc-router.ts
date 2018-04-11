@@ -56,7 +56,7 @@ export default class Router extends HTMLElement {
 
     disconnectedCallback() {
         if (this._unlisten) this._unlisten();
-        this.observer.disconnect();
+        if (this.observer) this.observer.disconnect();
     }
 
 

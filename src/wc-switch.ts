@@ -13,6 +13,8 @@ export default class Switch extends HTMLElement {
     observer: MutationObserver;
     unlisten: UnregisterCallback | null = null;
 
+    private _readyPromise?: Promise<boolean>;
+
     constructor() {
         super();
         this.observer = new MutationObserver(this._handleMutation.bind(this));
@@ -20,27 +22,30 @@ export default class Switch extends HTMLElement {
 
 
     connectedCallback() {
-        const init = () => {
-            this.router = document.querySelector('wc-router');
-            if (!this.router) this._error('Place the switch inside a <WC-ROUTER>');
+        this._readyPromise = new Promise((res: Function) => {
+            const init = () => {
+                this.router = document.querySelector('wc-router');
+                if (!this.router) this._error('Place the switch inside a <WC-ROUTER>');
 
-            const r = this.router;
-            if (!r) return this._error('Router does not exist');
+                const r = this.router;
+                if (!r) return this._error('Router does not exist');
 
-            const h = r.history;
-            if (!h) return this._error('Router is not initialised');
+                const h = r.history;
+                if (!h) return this._error('Router is not initialised');
 
-            this.addRoutes(Array.from(this.children) as Route[]);
-            this._handleChange(h.location);
+                this.addRoutes(Array.from(this.children) as Route[]);
+                this._handleChange(h.location);
 
-            this.unlisten = h.listen(
-                this._handleChange.bind(this)
-            );
-        };
+                this.unlisten = h.listen(
+                    this._handleChange.bind(this)
+                );
+                res(true);
+            };
 
-        // @ts-ignore Provided by WC polyfill
-        if (window.WebComponents.ready) init();
-        document.addEventListener('WebComponentsReady', init.bind(this));
+            // @ts-ignore Provided by WC polyfill
+            if (window.WebComponents.ready) init();
+            document.addEventListener('WebComponentsReady', init.bind(this));
+        });
     }
 
 
@@ -54,7 +59,7 @@ export default class Switch extends HTMLElement {
             .filter(r => !this.routes.includes(r))
             .forEach(r => {
                 this.routes.push(r);
-                r.disconnect();
+                if (r.disconnect) r.disconnect();
             });
     }
 
@@ -70,16 +75,19 @@ export default class Switch extends HTMLElement {
     }
 
 
-    private _handleChange(location: Location) {
+    private async _handleChange(location: Location) {
         let matched: boolean | Route = false;
         const router = this.router;
         if (!router) return;
+
+        await this._readyPromise;
 
         this.routes.forEach(r => {
             // Only show the first route that matches
             if (matched) return r.disconnect();
 
             const match = matchPath(location.pathname, r.path);
+
             if (match || r.path === '*') {
                 if (match) {
                     router.params = {...router.params, ...match.params};
