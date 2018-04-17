@@ -10,3 +10,4 @@ export {default as Router} from './wc-router';
 export {default as Route} from './wc-route';
 export {default as Switch} from './wc-switch';
 export {default as Link} from './wc-link';
+export {MatchPathOptions} from './lib/matchPath';
