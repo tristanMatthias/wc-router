@@ -50,7 +50,9 @@ export default class Router extends HTMLElement {
         this._validateChildren();
 
         this._unlisten = h.listen(this._handleChange.bind(this));
-        this._handleChange(h.location);
+        setTimeout(() => {
+            this._handleChange(h.location)
+        }, 10);
     }
 
 
@@ -117,6 +119,7 @@ export default class Router extends HTMLElement {
     private _handleChange(location: Location) {
         this.params = {};
 
+
         Object.entries(this.routes).forEach(([route, routes]) => {
             const match = matchPath(location.pathname, route);
             if (match) {
@@ -136,7 +139,9 @@ export default class Router extends HTMLElement {
         (Array.from(document.querySelectorAll('wc-link')) as Link[])
             .filter(l => l.to)
             .forEach(l => {
-                l.active = Boolean(matchPath(location.pathname, l.to));
+                const m = matchPath(location.pathname, l.to);
+                if (m && m.isExact) l.active = true;
+                else l.active = false;
             });
     }
 
